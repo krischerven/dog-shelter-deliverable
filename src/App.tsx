@@ -17,7 +17,7 @@ function getValue(element_name: string) {
 }
 
 function safeFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
-  let params = init ? JSON.stringify(init) : '';
+  const params = init ? JSON.stringify(init) : '';
   if (DRY_RUN) {
     console.log(`Running dry fetch on input ${input} (params=${params})`);
     return coldFetch(input, init);
@@ -29,7 +29,7 @@ function safeFetch(input: RequestInfo, init?: RequestInit): Promise<Response> {
 
 function postRequestHelper(
   endpoint: string,
-  body?: Object,
+  body?: object,
   dataHandler?: (data: any) => void,
 ) {
   safeFetch(`${HTTPS_BASE_URL}${endpoint}`, {
@@ -65,7 +65,7 @@ function postRequestHelper(
 
 function getRequestHelper(
   endpoint: string,
-  params?: Object,
+  params?: object,
   dataHandler?: (data: any) => void,
 ) {
   const params_string = params ? `/?${objectToQueryParams(params)}` : '';
@@ -85,7 +85,7 @@ function getRequestHelper(
     })
     .then((data: any) => {
       // Handle the response data
-      console.log(data);
+      console.log("GET data", data);
       if (dataHandler) {
         dataHandler(data);
       }
@@ -105,6 +105,7 @@ interface Dog {
 }
 
 function App() {
+
   const [loginStatus, setLoginStatus] = useState(false);
   const [dogBreeds, setDogBreeds] = useState<Array<string>>([]);
   const [zipCodes] = useState<Array<string>>([]);
@@ -112,13 +113,13 @@ function App() {
   const [ranSearch, setRanSearch] = useState(false);
 
   function populateDogBreeds() {
-    getRequestHelper('/dogs/breeds', undefined, (data: any) => {
+    getRequestHelper('/dogs/breeds', undefined, (data: Array<string>) => {
       setDogBreeds(['Any'].concat(data));
     });
   }
 
   function searchDogs() {
-    let params: Record<string, any> = {};
+    const params: Record<string, any> = {};
     const setParam = (setting: string, value: any) => {
       if (value) {
         params[setting] = value;
@@ -141,7 +142,7 @@ function App() {
     getRequestHelper(
       '/dogs/search',
       params,
-      (data: Record<string, Array<String>>) => {
+      (data: Record<string, Array<string>>) => {
         postRequestHelper('/dogs/', data.resultIds, (data: Array<Dog>) => {
           if (data.length === 0) {
             setRanSearch(true);
@@ -174,8 +175,8 @@ function App() {
     if (DEBUG_MODE) {
       useEffect(() => {
         const timeoutId = setTimeout(() => {
-          (document.getElementById('name') as HTMLInputElement)!!.value = 'me';
-          (document.getElementById('email') as HTMLInputElement)!!.value =
+          (document.getElementById('name') as HTMLInputElement).value = 'me';
+          (document.getElementById('email') as HTMLInputElement).value =
             'me@gmail.com';
         }, 100);
 
