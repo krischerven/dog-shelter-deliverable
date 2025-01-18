@@ -69,6 +69,14 @@ div.search-grid img {
   padding-bottom: 40px;
 }
 
+#search-button {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 30px;
+  border-radius: 15px;
+  background-color: #9b9b9b;
+}
+
 div.search-view {
   display: flex;
   flex-wrap: wrap;

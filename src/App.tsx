@@ -268,7 +268,7 @@ function App() {
           <br />
         </div>
 
-        <button onClick={searchDogs} style={{ 'margin-bottom': '30px' }}>
+        <button id="search-button" onClick={searchDogs}>
           SEARCH
         </button>
 
