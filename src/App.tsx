@@ -85,7 +85,7 @@ function getRequestHelper(
     })
     .then((data: any) => {
       // Handle the response data
-      console.log("GET data", data);
+      console.log('GET data', data);
       if (dataHandler) {
         dataHandler(data);
       }
@@ -105,7 +105,6 @@ interface Dog {
 }
 
 function App() {
-
   const [loginStatus, setLoginStatus] = useState(false);
   const [dogBreeds, setDogBreeds] = useState<Array<string>>([]);
   const [zipCodes] = useState<Array<string>>([]);
@@ -171,7 +170,9 @@ function App() {
     );
   }
 
-  function loginPage() {
+  function LoginPage() {
+
+    // Note: This check is fine because DEBUG_MODE is a constant
     if (DEBUG_MODE) {
       useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -202,7 +203,7 @@ function App() {
     );
   }
 
-  function searchPage() {
+  function SearchPage() {
     useEffect(() => {}, []);
     return (
       <>
@@ -276,7 +277,8 @@ function App() {
         <div className="search-view">
           {dogList.length === 0 && ranSearch && (
             <p key="no-search-results">
-              No results found. Have you tried a broader set of search parameters?
+              No results found. Have you tried a broader set of search
+              parameters?
             </p>
           )}
           {dogList.map((dog: Dog) => (
@@ -295,9 +297,9 @@ function App() {
   }
 
   if (loginStatus) {
-    return searchPage();
+    return SearchPage();
   } else {
-    return loginPage();
+    return LoginPage();
   }
 }
 
