@@ -145,6 +145,7 @@ function App() {
         postRequestHelper('/dogs/', data.resultIds, (data: Array<Dog>) => {
           if (data.length === 0) {
             setRanSearch(true);
+            setDogList([]);
           } else {
             setDogList(data);
           }
@@ -207,7 +208,7 @@ function App() {
         <h1>Dog Shelter</h1>
         <div className="grid">
           <label htmlFor="breeds">Breeds</label>
-          <select name="breeds" id="breeds">
+          <select name="breeds" id="breeds" onChange={searchDogs}>
             {dogBreeds.map((breed) => (
               <option key={breed} value={breed}>
                 {breed}
@@ -216,7 +217,7 @@ function App() {
           </select>
 
           <label htmlFor="zip-codes">Zip codes</label>
-          <select name="zip-codes" id="zip-codes">
+          <select name="zip-codes" id="zip-codes" onChange={searchDogs}>
             {zipCodes.map((zipcode) => (
               <option key={zipcode} value={zipcode}>
                 {zipcode}
@@ -225,7 +226,14 @@ function App() {
           </select>
 
           <label htmlFor="min-age">Minimum age</label>
-          <input type="number" id="min-age" min="0" max="19" defaultValue="0" />
+          <input
+            type="number"
+            id="min-age"
+            min="0"
+            max="19"
+            defaultValue="0"
+            onChange={searchDogs}
+          />
 
           <label htmlFor="max-age">Maximum age</label>
           <input
@@ -234,6 +242,7 @@ function App() {
             min="0"
             max="20"
             defaultValue="20"
+            onChange={searchDogs}
           />
 
           <label htmlFor="# of results"># of results</label>
@@ -243,10 +252,11 @@ function App() {
             min="1"
             max="100"
             defaultValue="25"
+            onChange={searchDogs}
           />
 
-          <label htmlFor="sort-by-field">Sort by field</label>
-          <select name="sort-by-field" id="sort-by-field">
+          <label htmlFor="sort-by-field">Sort by</label>
+          <select name="sort-by-field" id="sort-by-field" onChange={searchDogs}>
             <option value="breed:asc">Breed (A-Z)</option>
             <option value="breed:desc">Breed (Z-A)</option>
             <option value="name:asc">Name (A-Z)</option>
@@ -265,7 +275,7 @@ function App() {
         <div className="search-view">
           {dogList.length === 0 && ranSearch && (
             <p key="no-search-results">
-              No results found. Have you tried a broader set of parameters?
+              No results found. Have you tried a broader set of search parameters?
             </p>
           )}
           {dogList.map((dog: Dog) => (
