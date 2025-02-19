@@ -44,7 +44,10 @@ function postRequestHelper(
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (endpoint === ENDPOINT_LOGIN) {
+          error("Invalid name or email address.");
+        }
+        throw new Error(`HTTP error! Status: ${response.status}, Error: ${response}`);
       }
       if (endpoint === ENDPOINT_LOGIN || endpoint === ENDPOINT_LOGOUT) {
         return response;
