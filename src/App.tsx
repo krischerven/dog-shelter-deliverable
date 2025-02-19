@@ -299,7 +299,7 @@ function App() {
       searchDogs(undefined, newZipCodes);
     }
 
-    const favoriteDog = (dogName: String, dogID: String) => {
+    const favoriteDog = (dogName: string, dogID: string) => {
       popup(`Favorited <strong>${dogName}</strong>`);
       setFavoriteDogIDs(favoriteDogIDs.concat(dogID));
     }
