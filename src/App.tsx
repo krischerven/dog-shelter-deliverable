@@ -216,11 +216,9 @@ function App() {
 
   function LoginPage() {
 
-    // Note: This check is fine because DEBUG_MODE is a constant.
-    // The React warning can be safely ignored.
-    if (DEBUG_MODE) {
+    useEffect(() => {
 
-      useEffect(() => {
+      if (DEBUG_MODE) {
         const timeoutId = setTimeout(() => {
           (document.getElementById('name') as HTMLInputElement).value = 'me';
           (document.getElementById('email') as HTMLInputElement).value = 'placeholder@gmail.com';
@@ -228,9 +226,9 @@ function App() {
 
         // Cleanup function to clear timeout on unmount
         return () => clearTimeout(timeoutId);
+      }
 
-      }, []);
-    }
+    }, []);
 
     return (
       <>
