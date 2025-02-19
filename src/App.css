@@ -64,6 +64,7 @@ div.zip-code-section {
 #add-zip-code-button {
   margin-left: 0.5em;
   font-size: 0.75em;
+  background-color: #e9e9ed;
 }
 
 #taglist {
@@ -90,25 +91,22 @@ div.search-grid {
   grid-template-columns: max-content max-content;
 }
 div.search-grid label {
-  padding-right: 20px;
   /* A smaller font-size saves space, allowing 4 images per row */
   font-size: 0.75em;
 }
-
 div.search-grid img {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   padding-bottom: 40px;
 }
-
 div.search-grid .fav-img {
   position: relative;
   z-index: 0;
   width: 50px;
   height: 50px;
   top: 5px;
-  left: -100px;
+  left: -55px;
 }
 
 #search-button {
