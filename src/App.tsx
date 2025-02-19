@@ -332,7 +332,7 @@ function App() {
             ))}
           </select>
 
-          <label htmlFor="zip-code">Zip code</label>
+          <label htmlFor="zip-code">ZIP Code</label>
           <div style={{ display: "flex" }}>
             <input
               type="number"
@@ -451,7 +451,8 @@ function App() {
           {dogList.map((dog: Dog) => (
             <div className="search-grid">
               <label htmlFor={dog.id} key={dog.id + '-label'}>
-                {dog.name}, a {dog.age} year-old {dog.breed} (zip {dog.zip_code})
+                {dog.name}, a {dog.age} year-old <strong>{dog.breed}</strong><br/>
+                (ZIP Code {dog.zip_code})
               </label>
               <br />
               <img key={dog.id} src={dog.img}></img>
