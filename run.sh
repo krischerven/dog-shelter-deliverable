@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env sh
 npm run dev
