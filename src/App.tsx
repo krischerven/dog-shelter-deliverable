@@ -12,7 +12,7 @@ const ENDPOINT_LOGOUT: string = '/auth/logout';
 const DRY_RUN: boolean = false;
 
 // Enables debugging conveniences like pre-filled login
-const DEBUG_MODE: boolean = true;
+const DEBUG_MODE: boolean = false;
 
 function getValue(element_name: string) {
   return (document.getElementById(element_name) as HTMLInputElement).value;
@@ -46,8 +46,10 @@ function postRequestHelper(
       if (!response.ok) {
         if (endpoint === ENDPOINT_LOGIN) {
           error("Invalid name or email address.");
+        } else if (response.status === 401) {
+          error("Your session has expired. Please login again to continue.");
         }
-        throw new Error(`HTTP error! Status: ${response.status}, Error: ${response}`);
+        throw new Error(`HTTP POST error! Status: ${response.status}, Error: ${response}`);
       }
       if (endpoint === ENDPOINT_LOGIN || endpoint === ENDPOINT_LOGOUT) {
         return response;
@@ -82,6 +84,9 @@ function getRequestHelper(
   })
     .then((response) => {
       if (!response.ok) {
+        if (response.status === 401) {
+          error("Your session has expired. Please login again to continue.");
+        }
         throw new Error(`HTTP GET error! Status: ${response.status}`);
       }
       return response.json();
@@ -454,7 +459,7 @@ function App() {
           {dogList.map((dog: Dog) => (
             <div className="search-grid">
               <label htmlFor={dog.id} key={dog.id + '-label'}>
-                {dog.name}, a {dog.age} year-old <strong>{dog.breed}</strong><br/>
+                {dog.name}, a {dog.age} year-old <strong>{dog.breed}</strong><br />
                 (ZIP Code {dog.zip_code})
               </label>
               <br />
