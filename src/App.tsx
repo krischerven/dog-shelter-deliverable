@@ -306,9 +306,11 @@ function App() {
       searchDogs(undefined, newZipCodes);
     }
 
-    const favoriteDog = (dogName: string, dogID: string) => {
-      popup(`Favorited <strong>${dogName}</strong>`);
-      setFavoriteDogIDs(favoriteDogIDs.concat(dogID));
+    const favoriteDog = (name: string, id: string) => {
+      popup(`Favorited <strong>${name}</strong>`);
+      const newIDs = favoriteDogIDs.concat(id);
+      // Remove duplicates
+      setFavoriteDogIDs([...new Set(newIDs.concat(id))]);
     }
 
     const paginatedDogList = (dogList: Dog[]) => {
