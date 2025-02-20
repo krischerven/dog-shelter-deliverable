@@ -120,21 +120,21 @@ function App() {
   const [ranSearch, setRanSearch] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const logoutRequested = useRef(false);
-  const [dogBreeds, setDogBreeds] = useState<Array<string>>([]);
-  const [selectedBreeds, setSelectedBreeds] = useState<Array<string>>([]);
-  const [selectedZipCodes, setSelectedZipCodes] = useState<Array<string>>([]);
-  const [dogList, setDogList] = useState<Array<Dog>>([]);
-  const [favoriteDogIDs, setFavoriteDogIDs] = useState<Array<string>>([]);
+  const [dogBreeds, setDogBreeds] = useState<string[]>([]);
+  const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
+  const [selectedZipCodes, setSelectedZipCodes] = useState<string[]>([]);
+  const [dogList, setDogList] = useState<Dog[]>([]);
+  const [favoriteDogIDs, setFavoriteDogIDs] = useState<string[]>([]);
   const [dogMatch, setDogMatch] = useState<Dog | null>(null);
   const [idToDog, _] = useState<Map<string, Dog>>(new Map<string, Dog>());
 
   function populateDogBreeds() {
-    getRequestHelper('/dogs/breeds', undefined, (data: Array<string>) => {
+    getRequestHelper('/dogs/breeds', undefined, (data: string[]) => {
       setDogBreeds([ANY_BREED].concat(data));
     });
   }
 
-  function searchDogs(breeds?: Array<string>, zipCodes?: Array<string>) {
+  function searchDogs(breeds?: string[], zipCodes?: string[]) {
 
     breeds = breeds || selectedBreeds
     zipCodes = zipCodes || selectedZipCodes
@@ -172,8 +172,8 @@ function App() {
     getRequestHelper(
       '/dogs/search',
       params,
-      (data: Record<string, Array<string>>) => {
-        postRequestHelper('/dogs/', data.resultIds, (data: Array<Dog>) => {
+      (data: Record<string, string[]>) => {
+        postRequestHelper('/dogs/', data.resultIds, (data: Dog[]) => {
           if (data.length === 0) {
             setRanSearch(true);
             setDogList([]);
@@ -253,7 +253,7 @@ function App() {
     const dogBreedChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
       const dogBreed = e.target.value;
-      let newBreeds: Array<string> = [];
+      let newBreeds: string[] = [];
 
       if (selectedBreeds.includes(dogBreed)) {
         return;
@@ -279,7 +279,7 @@ function App() {
     const addZipCode = () => {
 
       const zipCode = (document.getElementById("zip-code") as HTMLInputElement).value
-      let newZipCodes: Array<string> = [];
+      let newZipCodes: string[] = [];
 
       if (selectedZipCodes.includes(zipCode)) {
         newZipCodes = selectedZipCodes;
@@ -303,7 +303,7 @@ function App() {
       setFavoriteDogIDs(favoriteDogIDs.concat(dogID));
     }
 
-    const paginatedDogList = (dogList: Array<Dog>) => {
+    const paginatedDogList = (dogList: Dog[]) => {
 
       const PAGE_SIZE = 9;
       const totalPages = Math.ceil(dogList.length / PAGE_SIZE);
