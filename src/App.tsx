@@ -118,6 +118,7 @@ function App() {
   // state
   const [loggedIn, setLoggedIn] = useState(true);
   const [ranSearch, setRanSearch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loginStatus, setLoginStatus] = useState(false);
   const [dogBreeds, setDogBreeds] = useState<Array<string>>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<Array<string>>([]);
@@ -324,6 +325,59 @@ function App() {
       )
     }
 
+
+    const paginatedDogList = (dogList: Array<Dog>) => {
+
+      const PAGE_SIZE = 9;
+      const totalPages = Math.ceil(dogList.length / PAGE_SIZE);
+      const paginatedDogs = dogList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+      return (
+        <div className="search-view">
+          {dogList.length === 0 && ranSearch && (
+            <p key="no-search-results">
+              <strong>No results found</strong>. Have you tried using a broader set of search parameters?
+            </p>
+          )}
+          {paginatedDogs.map((dog) => (
+            <div className="search-grid" key={dog.id}>
+              <label htmlFor={dog.id}>
+                {dog.name}, a {dog.age} year-old <strong>{dog.breed}</strong><br />
+                (ZIP Code {dog.zip_code})
+              </label>
+              <br />
+              <img src={dog.img} alt={dog.name} />
+              <img
+                className="fav-img"
+                src="./favorite.webp"
+                alt="Favorite"
+                onClick={() => favoriteDog(dog.name, dog.id)}
+              />
+            </div>
+          ))}
+          {totalPages > 1 && (
+            <div className="pagination-controls">
+              <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+                Previous
+              </button>
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index + 1}
+                  className={currentPage === index + 1 ? "active" : ""}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>
+                Next
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    };
+
     return (
       <>
         <h1>Your local dog shelter</h1>
@@ -448,24 +502,7 @@ function App() {
         </button>
 
         <div className="search-view">
-          {dogList.length === 0 && ranSearch && (
-            <p key="no-search-results">
-              <strong>No results found</strong>. Have you tried using a broader
-              set of search parameters?
-            </p>
-          )}
-          {dogList.map((dog: Dog) => (
-            <div className="search-grid">
-              <label htmlFor={dog.id} key={dog.id + '-label'}>
-                {dog.name}, a {dog.age} year-old <strong>{dog.breed}</strong><br />
-                (ZIP Code {dog.zip_code})
-              </label>
-              <br />
-              <img key={dog.id} src={dog.img}></img>
-              <img key={dog.id + '-fav'} className="fav-img" src="./favorite.webp"
-                onClick={() => favoriteDog(dog.name, dog.id)}></img>
-            </div>
-          ))}
+          {paginatedDogList(dogList)}
         </div>
       </>
     );

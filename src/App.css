@@ -134,3 +134,7 @@ div.search-view {
 div.search-view p {
   margin-left: 5px;
 }
+div.search-view .pagination-controls button {
+  margin-right: 5px;
+  margin-bottom: 20px;
+}
