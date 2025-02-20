@@ -547,7 +547,7 @@ function App() {
     return (
       <>
         <button onClick={() => setDogMatch(null)}>Return to login</button>
-        <h1>Congratulations on your new pet dog, <strong>{dog.name}</strong>!</h1>
+        <h1>Congratulations on your new pet {dog.breed}, <strong>{dog.name}</strong>!</h1>
         <img key={dog.id} src={dog.img}></img>
       </>
     )
