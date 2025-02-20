@@ -207,7 +207,7 @@ function App() {
 
   function findDogMatch() {
     if (favoriteDogIDs.length === 0) {
-      error("You haven't favorited any dogs yet!");
+      error("You haven't favorited any dogs yet! Click the star next to at least one dog to see your match.");
       return;
     }
     postRequestHelper('/dogs/match', favoriteDogIDs, (data) => {
