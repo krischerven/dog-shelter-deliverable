@@ -22,12 +22,12 @@ function fetch1(input: RequestInfo, init?: RequestInit): Promise<Response> {
   const params = init ? JSON.stringify(init) : '';
   if (DRY_RUN) {
     if (DEBUG_MODE) {
-        console.log(`Running dry fetch on input ${input} (params=${params})`);
+      console.log(`Running dry fetch on input ${input} (params=${params})`);
     }
     return coldFetch(input, init);
   } else {
     if (DEBUG_MODE) {
-        console.log(`Running real fetch on input ${input} (params=${params})`);
+      console.log(`Running real fetch on input ${input} (params=${params})`);
     }
     return fetch(input, init);
   }
@@ -126,6 +126,12 @@ function App() {
 
   // constants
   const ANY_BREED = 'Any';
+  const MIN_ZIP_CODE = "00501";
+  const MAX_ZIP_CODE = "99950";
+  const MIN_AGE = 0;
+  const MAX_AGE = 30;
+  const MIN_NUM_RESULTS = 1;
+  const MAX_NUM_RESULTS = 100;
 
   // state
   const [loggedIn, setLoggedIn] = useState(false);
@@ -148,8 +154,8 @@ function App() {
 
   function searchDogs(breeds?: string[], zipCodes?: string[]) {
 
-    breeds = breeds || selectedBreeds
-    zipCodes = zipCodes || selectedZipCodes
+    breeds = breeds || selectedBreeds;
+    zipCodes = zipCodes || selectedZipCodes;
 
     const params: Record<string, any> = {};
     const setParam = (setting: string, value: any) => {
@@ -158,9 +164,13 @@ function App() {
       }
     };
 
-    setParam('ageMin', getValue('min-age'));
-    setParam('ageMax', getValue('max-age'));
-    setParam('size', getValue('num-results'));
+    const clamp = function(num: number, min: number, max: number): number {
+      return Math.min(Math.max(num, min), max);
+    }
+
+    setParam('ageMin', clamp(Number(getValue('min-age')), MIN_AGE, MAX_AGE).toString());
+    setParam('ageMax', clamp(Number(getValue('max-age')), MIN_AGE, MAX_AGE).toString());
+    setParam('size', clamp(Number(getValue('num-results')), MIN_NUM_RESULTS, MAX_NUM_RESULTS).toString());
     setParam('from', 0);
     setParam('sort', getValue('sort-by-field'));
 
@@ -291,7 +301,12 @@ function App() {
 
     const addZipCode = () => {
 
-      const zipCode = (document.getElementById("zip-code") as HTMLInputElement).value
+      const zipCode = (document.getElementById("zip-code") as HTMLInputElement).value;
+      if (Number(zipCode) < Number(MIN_ZIP_CODE) || Number(zipCode) > Number(MAX_ZIP_CODE)) {
+        error(`Invalid ZIP Code ${zipCode}`);
+        return;
+      }
+
       let newZipCodes: string[] = [];
 
       if (selectedZipCodes.includes(zipCode)) {
@@ -390,9 +405,9 @@ function App() {
               type="number"
               name="zip-code"
               id="zip-code"
-              min="00501"
-              max="99950"
-              defaultValue="00501"
+              min={MIN_ZIP_CODE}
+              max={MAX_ZIP_CODE}
+              defaultValue={MIN_ZIP_CODE}
             />
             <button
               name="add-zip-code"
@@ -406,9 +421,9 @@ function App() {
           <input
             type="number"
             id="min-age"
-            min="0"
-            max="19"
-            defaultValue="0"
+            min={MIN_AGE}
+            max={MAX_AGE}
+            defaultValue={MIN_AGE}
             onChange={() => searchDogs()}
           />
 
@@ -416,9 +431,9 @@ function App() {
           <input
             type="number"
             id="max-age"
-            min="0"
-            max="20"
-            defaultValue="20"
+            min={MIN_AGE}
+            max={MAX_AGE}
+            defaultValue={MAX_AGE}
             onChange={() => searchDogs()}
           />
 
@@ -426,8 +441,8 @@ function App() {
           <input
             type="number"
             id="num-results"
-            min="1"
-            max="100"
+            min={MIN_NUM_RESULTS}
+            max={MAX_NUM_RESULTS}
             defaultValue="25"
             onChange={() => searchDogs()}
           />
@@ -520,9 +535,9 @@ function App() {
       logoutRequested.current = true;
       postRequestHelper(ENDPOINT_LOGOUT, undefined, ((data) => {
         if (data.status === 200) {
-          console.log("Successfully logged out the user.")
+          console.log("Successfully logged out the user.");
         } else {
-          console.log(`Unexpected status: ${data.status}`)
+          console.log(`Unexpected status: ${data.status}`);
         }
       }))
     }
