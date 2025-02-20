@@ -182,8 +182,8 @@ function App() {
       params,
       (data: Record<string, string[]>) => {
         postRequestHelper('/dogs/', data.resultIds, (data: Dog[]) => {
+          setRanSearch(true);
           if (data.length === 0) {
-            setRanSearch(true);
             setDogList([]);
           } else {
             setDogList(data);
@@ -207,6 +207,7 @@ function App() {
       (data) => {
         if (data.status == 200) {
           setLoggedIn(true);
+          logoutRequested.current = false;
           populateDogBreeds();
         }
       },
@@ -256,7 +257,7 @@ function App() {
   }
 
   function searchPage() {
-    useEffect(() => { }, []);
+    useEffect(() => { });
 
     const dogBreedChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
@@ -496,10 +497,19 @@ function App() {
   }
 
   function dogMatchPage() {
-    useEffect(() => { }, []);
+    useEffect(() => { });
 
+    // reset state
     if (loggedIn) {
       setLoggedIn(false);
+      setRanSearch(false);
+      setCurrentPage(1);
+      setDogBreeds([]);
+      setSelectedBreeds([]);
+      setSelectedZipCodes([]);
+      setDogList([])
+      setFavoriteDogIDs([]);
+      idToDog.clear();
     }
 
     if (!loggedIn && !logoutRequested.current) {
