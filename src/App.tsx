@@ -57,7 +57,7 @@ function postRequestHelper(
         } else if (response.status === 401) {
           error("Your session has expired. Please login again to continue.");
         }
-        throw new Error(`HTTP POST error! Status: ${response.status}, Error: ${response}`);
+        throw new Error(`HTTP POST error! Status: ${response.status}, message: ${response.statusText}`);
       }
       if (endpoint === ENDPOINT_LOGIN || endpoint === ENDPOINT_LOGOUT) {
         return response;
@@ -95,7 +95,7 @@ function getRequestHelper(
         if (response.status === 401) {
           error("Your session has expired. Please login again to continue.");
         }
-        throw new Error(`HTTP GET error! Status: ${response.status}`);
+        throw new Error(`HTTP GET error! Status: ${response.status}, message: ${response.statusText}`);
       }
       return response.json();
     })
