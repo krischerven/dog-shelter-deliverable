@@ -138,3 +138,8 @@ div.search-view .pagination-controls button {
   margin-right: 5px;
   margin-bottom: 20px;
 }
+div.search-view .pagination-controls button.active {
+  margin-right: 5px;
+  margin-bottom: 20px;
+  color: #5d65d3;
+}
