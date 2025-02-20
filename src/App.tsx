@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { popup, error, coldFetch, objectToQueryParams } from './Util.tsx';
 import './App.css';
 
@@ -116,10 +116,10 @@ function App() {
   const ANY_BREED = 'Any';
 
   // state
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [ranSearch, setRanSearch] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loginStatus, setLoginStatus] = useState(false);
+  const logoutRequested = useRef(false);
   const [dogBreeds, setDogBreeds] = useState<Array<string>>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<Array<string>>([]);
   const [selectedZipCodes, setSelectedZipCodes] = useState<Array<string>>([]);
@@ -198,7 +198,7 @@ function App() {
       },
       (data) => {
         if (data.status == 200) {
-          setLoginStatus(true);
+          setLoggedIn(true);
           populateDogBreeds();
         }
       },
@@ -229,7 +229,7 @@ function App() {
         return () => clearTimeout(timeoutId);
       }
 
-    }, []);
+    });
 
     return (
       <>
@@ -302,29 +302,6 @@ function App() {
       popup(`Favorited <strong>${dogName}</strong>`);
       setFavoriteDogIDs(favoriteDogIDs.concat(dogID));
     }
-
-    if (dogMatch !== null) {
-      if (loggedIn) {
-        // FIXME
-        console.log("HERE ONCE")
-        setLoggedIn(false);
-        postRequestHelper(ENDPOINT_LOGOUT, undefined, ((data) => {
-          if (data.status === 200) {
-            console.log("Successfully logged out the user.")
-          } else {
-            console.log(`Unexpected status: ${data.status}`)
-          }
-        }))
-      }
-      const dog = dogMatch;
-      return (
-        <>
-          <h1>Congratulations on your new pet dog, <strong>{dog.name}</strong>!</h1>
-          <img key={dog.id} src={dog.img}></img>
-        </>
-      )
-    }
-
 
     const paginatedDogList = (dogList: Array<Dog>) => {
 
@@ -508,7 +485,38 @@ function App() {
     );
   }
 
-  if (loginStatus) {
+  function dogMatchPage() {
+    useEffect(() => { }, []);
+
+    if (loggedIn) {
+      setLoggedIn(false);
+    }
+
+    if (!loggedIn && !logoutRequested.current) {
+      logoutRequested.current = true;
+      postRequestHelper(ENDPOINT_LOGOUT, undefined, ((data) => {
+        if (data.status === 200) {
+          console.log("Successfully logged out the user.")
+        } else {
+          console.log(`Unexpected status: ${data.status}`)
+        }
+      }))
+    }
+
+    // Already checked if the if-else below
+    const dog = dogMatch!!;
+    return (
+      <>
+        <button onClick={() => setDogMatch(null)}>Return to login</button>
+        <h1>Congratulations on your new pet dog, <strong>{dog.name}</strong>!</h1>
+        <img key={dog.id} src={dog.img}></img>
+      </>
+    )
+  }
+
+  if (dogMatch != null) {
+    return dogMatchPage();
+  } else if (loggedIn) {
     return searchPage();
   } else {
     return loginPage();
