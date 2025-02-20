@@ -215,7 +215,7 @@ function App() {
     })
   }
 
-  function LoginPage() {
+  function loginPage() {
 
     useEffect(() => {
 
@@ -247,7 +247,7 @@ function App() {
     );
   }
 
-  function SearchPage() {
+  function searchPage() {
     useEffect(() => { }, []);
 
     const dogBreedChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -509,9 +509,9 @@ function App() {
   }
 
   if (loginStatus) {
-    return SearchPage();
+    return searchPage();
   } else {
-    return LoginPage();
+    return loginPage();
   }
 }
 
