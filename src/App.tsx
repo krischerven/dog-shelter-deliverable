@@ -45,7 +45,15 @@ function postRequestHelper(
     .then((response) => {
       if (!response.ok) {
         if (endpoint === ENDPOINT_LOGIN) {
-          error("Invalid name or email address.");
+          const isValidEmail = (email: string): boolean => {
+            const regexpr = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return regexpr.test(email);
+          };
+          if (isValidEmail(getValue("email"))) {
+            error("Invalid name.");
+          } else {
+            error("Invalid email address.");
+          }
         } else if (response.status === 401) {
           error("Your session has expired. Please login again to continue.");
         }
