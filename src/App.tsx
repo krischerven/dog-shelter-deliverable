@@ -11,7 +11,7 @@ const ENDPOINT_LOGOUT: string = '/auth/logout';
 // Do we want to send real HTTP requests or simulated requests?
 const DRY_RUN: boolean = false;
 
-// Enables debugging conveniences like pre-filled login
+// Enables debugging conveniences like pre-filled login and certain debugging messages
 const DEBUG_MODE: boolean = false;
 
 function getValue(element_name: string) {
@@ -21,10 +21,14 @@ function getValue(element_name: string) {
 function fetch1(input: RequestInfo, init?: RequestInit): Promise<Response> {
   const params = init ? JSON.stringify(init) : '';
   if (DRY_RUN) {
-    console.log(`Running dry fetch on input ${input} (params=${params})`);
+    if (DEBUG_MODE) {
+        console.log(`Running dry fetch on input ${input} (params=${params})`);
+    }
     return coldFetch(input, init);
   } else {
-    console.log(`Running real fetch on input ${input} (params=${params})`);
+    if (DEBUG_MODE) {
+        console.log(`Running real fetch on input ${input} (params=${params})`);
+    }
     return fetch(input, init);
   }
 }
